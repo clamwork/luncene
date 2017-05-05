@@ -27,26 +27,26 @@ public abstract class BaseIndex<T> implements Runnable {
     /**
      * 主线程
      */
-    private final CountDownLatch countDownLatch1;
+    private final CountDownLatch maincountDownLatch;
     /**
      *工作线程
      */
-    private final CountDownLatch countDownLatch2;
+    private final CountDownLatch subcountDownLatch;
 
     /**
      * 对象列表
      */
     private List<T> list;
-    public BaseIndex(IndexWriter writer,CountDownLatch countDownLatch1, CountDownLatch countDownLatch2,
+    public BaseIndex(IndexWriter writer,CountDownLatch maincountDownLatch, CountDownLatch subcountDownLatch,
                      List<T> list){
         super();
         this.writer = writer;
-        this.countDownLatch1 = countDownLatch1;
-        this.countDownLatch2 = countDownLatch2;
+        this.maincountDownLatch = maincountDownLatch;
+        this.subcountDownLatch = subcountDownLatch;
         this.list = list;
     }
     public BaseIndex(String parentIndexPath, int subIndex,
-                     CountDownLatch countDownLatch1, CountDownLatch countDownLatch2,
+                     CountDownLatch maincountDownLatch, CountDownLatch subcountDownLatch,
                      List<T> list) {
         super();
         this.parentIndexPath = parentIndexPath;
@@ -62,11 +62,11 @@ public abstract class BaseIndex<T> implements Runnable {
             e.printStackTrace();
         };
         this.subIndex = subIndex;
-        this.countDownLatch1 = countDownLatch1;
-        this.countDownLatch2 = countDownLatch2;
+        this.maincountDownLatch = maincountDownLatch;
+        this.subcountDownLatch = subcountDownLatch;
         this.list = list;
     }
-    public BaseIndex(String path,CountDownLatch countDownLatch1, CountDownLatch countDownLatch2,
+    public BaseIndex(String path,CountDownLatch maincountDownLatch, CountDownLatch subcountDownLatch,
                      List<T> list) {
         super();
         try {
@@ -79,8 +79,8 @@ public abstract class BaseIndex<T> implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         };
-        this.countDownLatch1 = countDownLatch1;
-        this.countDownLatch2 = countDownLatch2;
+        this.maincountDownLatch = maincountDownLatch;
+        this.subcountDownLatch = subcountDownLatch;
         this.list = list;
     }
 
@@ -106,22 +106,19 @@ public abstract class BaseIndex<T> implements Runnable {
     @Override
     public void run() {
         try {
-            countDownLatch1.await();
+            maincountDownLatch.await();
             System.out.println(writer);
             indexDocs(writer,list);
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }finally{
-            countDownLatch2.countDown();
+            subcountDownLatch.countDown();
             try {
                 writer.commit();
                 writer.close();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 

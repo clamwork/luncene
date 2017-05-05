@@ -47,6 +47,7 @@ public class FileUtil {
             bean.setModified(file.lastModified());
             String content = "";
             if(filePath.endsWith(".doc") || filePath.endsWith(".docx")){
+
                 content = readDoc(file);
             }else{
                 content = new String(Files.readAllBytes(Paths.get(folder)));
@@ -57,21 +58,26 @@ public class FileUtil {
         return fileBeans;
     }
 
-    public static String readDoc(File file) throws IOException, XmlException, OpenXML4JException {
+    public static String readDoc(File file) {
         String filePath = file.getAbsolutePath();
-        if(filePath.endsWith(".doc")){
-            InputStream is = new FileInputStream(file);
-            WordExtractor ex = new WordExtractor(is);
-            String text2003 = ex.getText();
-            ex.close();
-            is.close();
-            return text2003;
-        }else{
-            OPCPackage opcPackage = POIXMLDocument.openPackage(filePath);
-            POIXMLTextExtractor extractor = new XWPFWordExtractor(opcPackage);
-            String text2007 = extractor.getText();
-            extractor.close();
-            return text2007;
+        try {
+            if (filePath.endsWith(".doc")) {
+                InputStream is = new FileInputStream(file);
+                WordExtractor ex = new WordExtractor(is);
+                String text2003 = ex.getText();
+                ex.close();
+                is.close();
+                return text2003;
+            } else {
+                OPCPackage opcPackage = POIXMLDocument.openPackage(filePath);
+                POIXMLTextExtractor extractor = new XWPFWordExtractor(opcPackage);
+                String text2007 = extractor.getText();
+                extractor.close();
+                return text2007;
+            }
+        }catch(Exception e){
+            System.out.println("File read error of path:"+filePath);
+            return "";
         }
     }
 

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 
+import com.hankcs.lucene.HanLPAnalyzer;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -28,13 +29,11 @@ import org.apache.lucene.search.SortField.Type;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopFieldCollector;
-import org.apache.lucene.store.FSDirectory;
-import org.lionsoul.jcseg.analyzer.v5x.JcsegAnalyzer5X;
-import org.lionsoul.jcseg.tokenizer.core.JcsegTaskConfig;
+import org.apache.lucene.store.MMapDirectory;
 
 
 public class SearchUtil {
-    public static final Analyzer analyzer = new JcsegAnalyzer5X(JcsegTaskConfig.SIMPLE_MODE);
+    public static final Analyzer analyzer = new HanLPAnalyzer();
     /**获取IndexSearcher对象（适合单索引目录查询使用）
      * @param indexPath 索引目录
      * @return
@@ -73,7 +72,7 @@ public class SearchUtil {
         IndexReader[] readers = new IndexReader[files.length];
         if(!realtime){
             for (int i = 0 ; i < files.length ; i ++) {
-                readers[i] = DirectoryReader.open(FSDirectory.open(Paths.get(files[i].getPath(), new String[0])));
+                readers[i] = DirectoryReader.open(MMapDirectory.open(Paths.get(files[i].getPath(), new String[0])));
             }
         }else{
             for (int i = 0 ; i < files.length ; i ++) {

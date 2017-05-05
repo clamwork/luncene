@@ -8,6 +8,7 @@ import org.apache.lucene.index.LogByteSizeMergePolicy;
 import org.apache.lucene.index.LogMergePolicy;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.MMapDirectory;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -25,7 +26,7 @@ public class IndexUtil {
      * @throws IOException
      */
     public static IndexWriter getIndexWriter(String indexPath, boolean create) throws IOException {
-        Directory dir = FSDirectory.open(Paths.get(indexPath, new String[0]));
+        Directory dir = MMapDirectory.open(Paths.get(indexPath, new String[0]));
         Analyzer analyzer = new StandardAnalyzer();
         IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
         LogMergePolicy mergePolicy = new LogByteSizeMergePolicy();

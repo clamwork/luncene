@@ -82,16 +82,18 @@
             <version>${luncene.version}</version>
         </dependency>
 
+        <!-- hanlp 分词 -->
         <dependency>
-            <groupId>org.lionsoul</groupId>
-            <artifactId>jcseg-core</artifactId>
-            <version>${jcseg.version}</version>
+            <groupId>com.hankcs</groupId>
+            <artifactId>hanlp</artifactId>
+            <version>portable-1.3.2</version>
         </dependency>
 
+        <!-- hanlp  lucene/solr插件 -->
         <dependency>
-            <groupId>org.lionsoul</groupId>
-            <artifactId>jcseg-analyzer</artifactId>
-            <version>${jcseg.version}</version>
+            <groupId>com.hankcs.nlp</groupId>
+            <artifactId>hanlp-lucene-plugin</artifactId>
+            <version>1.1.2</version>
         </dependency>
 
 

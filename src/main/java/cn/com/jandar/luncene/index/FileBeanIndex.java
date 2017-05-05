@@ -26,11 +26,16 @@ public class FileBeanIndex extends BaseIndex<FileBean>{
         super(parentIndexPath, subIndex, countDownLatch1, countDownLatch2, list);
     }
 
+    public FileBeanIndex(String indexPath,CountDownLatch mainCountDownLatch,CountDownLatch subCountLatch,List<FileBean> list){
+        super(indexPath,mainCountDownLatch,subCountLatch,list);
+    }
+
     @Override
     public void indexDoc(IndexWriter writer, FileBean t) throws Exception {
         Document doc = new Document();
         System.out.println(t.getPath());
         doc.add(new StringField("path", t.getPath(), Field.Store.YES));
+        doc.add(new StringField("code", "code", Field.Store.YES));
         doc.add(new LongField("modified", t.getModified(), Field.Store.YES));
         doc.add(new TextField("content", t.getContent(), Field.Store.YES));
         if (writer.getConfig().getOpenMode() == IndexWriterConfig.OpenMode.CREATE) {
