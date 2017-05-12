@@ -9,7 +9,6 @@ import java.util.concurrent.ExecutorService;
 
 import com.hankcs.lucene.HanLPAnalyzer;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -143,11 +142,11 @@ public class SearchUtil {
      * @return
      */
     public static Query getMultiQueryLikeSqlIn(Query ... querys){
-        BooleanQuery query = new BooleanQuery();
+        BooleanQuery.Builder builder = new BooleanQuery.Builder();
         for (Query subQuery : querys) {
-            query.add(subQuery,Occur.SHOULD);
+            builder.add(subQuery,Occur.SHOULD);
         }
-        return query;
+        return builder.build();
     }
 
     /**获取regexQuery对象
@@ -166,11 +165,11 @@ public class SearchUtil {
      * @return
      */
     public static Query getMultiQueryLikeSqlAnd(Query ... querys){
-        BooleanQuery query = new BooleanQuery();
+        BooleanQuery.Builder builder = new BooleanQuery.Builder();
         for (Query subQuery : querys) {
-            query.add(subQuery,Occur.MUST);
+            builder.add(subQuery,Occur.MUST);
         }
-        return query;
+        return builder.build();
     }
     /**对多个条件进行排序构建排序条件
      * @param fields
