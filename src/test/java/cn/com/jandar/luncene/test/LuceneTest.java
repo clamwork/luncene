@@ -74,18 +74,19 @@ public class LuceneTest {
         DirectoryReader reader = DirectoryReader.open(directory);
         IndexSearcher isearcher = new IndexSearcher(reader);
         //解析一个简单的查询
-        QueryParser parser = new QueryParser("content", analyzer);
-        Query query = parser.parse("内容缺失");
-        FuzzyQuery fuzzyQuery = new FuzzyQuery(new Term("content","缺失"));
-        int count =  isearcher.count(fuzzyQuery);
+        QueryParser parser = new QueryParser("caseName", analyzer);
+        Query query = parser.parse("受贿");
+        //FuzzyQuery fuzzyQuery = new FuzzyQuery(new Term("content","人民"));
+        int count =  isearcher.count(query);
         System.out.println("count:"+ count);
-        ScoreDoc[] hits = SearchUtil.getScoreDocsByPerPageAndSortField(isearcher,fuzzyQuery,0,100, Sort.INDEXORDER).scoreDocs;
+        ScoreDoc[] hits = SearchUtil.getScoreDocsByPerPageAndSortField(isearcher,query,0,100, Sort.INDEXORDER).scoreDocs;
         //迭代输出结果
 
         for (int i = 0; i < hits.length; i++) {
             Document hitDoc = isearcher.doc(hits[i].doc);
+            System.out.println(hitDoc.get("caseName"));
             System.out.println(hitDoc.get("path"));
-            System.out.println(hitDoc.get("content"));
+            //System.out.println(hitDoc.get("content"));
         }
         System.out.println("length:"+ hits.length);
         reader.close();
